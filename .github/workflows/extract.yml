@@ -5,8 +5,6 @@ on:
 
 permissions:
   contents: write
-  actions: write
-  workflows: write
 
 jobs:
   extract:
@@ -15,20 +13,34 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
-      - name: Verify ZIP exists
+      - name: Verify ZIP
         run: |
           test -f NORLEX_final.zip
+          echo "NORLEX_final.zip found"
 
-      - name: Extract NORLEX ZIP
+      - name: Extract NORLEX
         run: |
-          unzip -o NORLEX_final.zip -d .
-          rm NORLEX_final.zip
+          mkdir -p /tmp/norlex
+          unzip -q -o NORLEX_final.zip -d /tmp/norlex
 
-      - name: Commit extracted files
+          if [ -d "/tmp/norlex/NORLEX" ]; then
+            cp -a /tmp/norlex/NORLEX/. .
+          else
+            cp -a /tmp/norlex/. .
+          fi
+
+          rm -f NORLEX_final.zip
+
+      - name: Commit project files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
+
+          git add android assets backend docs lib test pubspec.yaml analysis_options.yaml ARCHITECTURE_REPORT.md
+
           git commit -m "Extract NORLEX final project" || echo "No changes to commit"
+
           git push origin HEAD:main
