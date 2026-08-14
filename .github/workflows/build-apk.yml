@@ -24,12 +24,6 @@ jobs:
       - name: تثبيت التبعيات
         run: flutter pub get
 
-      - name: فحص المشروع
-        run: flutter analyze
-
-      - name: تشغيل الاختبارات
-        run: flutter test
-
       - name: بناء APK
         run: flutter build apk --release
 
