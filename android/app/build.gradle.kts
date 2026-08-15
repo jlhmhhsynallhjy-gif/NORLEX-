@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         applicationId = "com.norlex.app"
-        minSdk = 24
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -28,7 +28,9 @@ android {
 
     signingConfigs {
         // لا يوجد release keystore حقيقي بعد.
-        // release build يُوقّع مؤقتًا بمفتاح debug فقط لإنتاج APK قابل للتثبيت للاختبار.
+        // release build يُوقّع مؤقتًا بمفتاح debug فقط لإنتاج APK قابل للتثبيت للاختبار،
+        // وهذا غير صالح للنشر على Google Play. لإعداد توقيع نشر حقيقي أضف
+        // android/key.properties + keystore حقيقي، ثم عدّل signingConfigs.getByName("release").
     }
 
     buildTypes {
@@ -37,7 +39,6 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
         }
-
         getByName("debug") {
             applicationIdSuffix = ".debug"
         }
